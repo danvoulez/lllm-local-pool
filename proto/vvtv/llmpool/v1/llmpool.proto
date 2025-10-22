@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package vvtv.llmpool.v1;
+
+// Core LLM Pool Service
+service LLMPool {
+  rpc Infer(Query) returns (Answer);
+  rpc Health(HealthRequest) returns (HealthResponse);
+}
+
+// Query message for inference requests
+message Query {
+  string request_id = 1;
+  string tenant_id = 2;
+  string project_id = 3;
+  Task task = 4;
+  string prompt = 5;
+  int32 max_tokens = 6;
+  int32 deadline_ms = 7;
+  Strategy strategy = 8;
+  map<string, string> meta = 9;
+}
+
+// Task types supported by the pool
+enum Task {
+  TASK_UNSPECIFIED = 0;
+  TASK_EXPAND_QUERIES = 1;
+  TASK_SITE_TACTICS = 2;
+  TASK_RERANK_CANDIDATES = 3;
+  TASK_JUDGE = 4;
+  TASK_RECOVERY_PLAN = 5;
+  TASK_ENRICH_METADATA = 6;
+}
+
+// Ensemble strategies
+enum Strategy {
+  STRATEGY_UNSPECIFIED = 0;
+  STRATEGY_FASTEST = 1;
+  STRATEGY_VOTING = 2;
+  STRATEGY_WEIGHTED = 3;
+  STRATEGY_CONSENSUS = 4;
+  STRATEGY_JUDGE = 5;
+}
+
+// Answer message for inference responses
+message Answer {
+  string request_id = 1;
+  string content = 2;
+  string winner_model = 3;
+  int32 duration_ms = 4;
+  bool from_cache = 5;
+  EnsembleDecision decision = 6;
+  map<string, string> meta = 7;
+}
+
+// Ensemble decision details
+message EnsembleDecision {
+  Strategy strategy_used = 1;
+  repeated string models_queried = 2;
+  repeated float model_scores = 3;
+  string reason = 4;
+}
+
+// Health check
+message HealthRequest {}
+
+message HealthResponse {
+  bool healthy = 1;
+  map<string, string> provider_status = 2;
+  string version = 3;
+}

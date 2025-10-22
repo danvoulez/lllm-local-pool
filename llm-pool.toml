@@ -1,0 +1,62 @@
+[server]
+grpc_addr = "0.0.0.0:7070"
+http_addr = "0.0.0.0:7071"
+enable_grpc = true
+enable_http = true
+
+[qos]
+max_deadline_ms = 1500
+hedge_after_ms = 300
+max_prompt_bytes = 16384
+max_tokens_default = 256
+
+[ensemble]
+default_strategy = "FASTEST"
+
+[ensemble.strategy_by_task]
+expand_queries = "FASTEST"
+site_tactics = "JUDGE"
+rerank_candidates = "JUDGE"
+recovery_plan = "FASTEST"
+enrich_metadata = "FASTEST"
+
+[breaker]
+fail_rate = 0.10
+window_size = 50
+open_cooldown_ms = 300000
+
+[cache]
+enabled = true
+driver = "memory"
+ttl_seconds = 900
+key_fields = ["task", "prompt", "max_tokens"]
+
+[[providers]]
+name = "ollama-phi3-mini"
+driver = "ollama"
+base_url = "http://127.0.0.1:11434"
+model = "phi3:mini"
+tasks = ["expand_queries", "enrich_metadata", "recovery_plan"]
+weight = 0.6
+
+[[providers]]
+name = "ollama-llama31-8b"
+driver = "ollama"
+base_url = "http://127.0.0.1:11434"
+model = "llama3.1:8b"
+tasks = ["judge", "site_tactics", "rerank_candidates", "expand_queries", "recovery_plan"]
+weight = 1.0
+
+[[providers]]
+name = "ollama-gemma2-9b"
+driver = "ollama"
+base_url = "http://127.0.0.1:11434"
+model = "gemma2:9b"
+tasks = ["rerank_candidates", "judge"]
+weight = 0.8
+
+[judge]
+model_provider = "ollama-llama31-8b"
+max_tokens = 128
+deadline_ms = 700
+fallback_strategy = "VOTING"
