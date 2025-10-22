@@ -1,13 +1,11 @@
 # 🌐 LLM Pool Service
 
-[![CI](https://github.com/yourusername/llm-pool/workflows/CI/badge.svg)](https://github.com/yourusername/llm-pool/actions)
+[![CI](https://github.com/danvoulez/lllm-local-pool/workflows/CI/badge.svg)](https://github.com/danvoulez/lllm-local-pool/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Rust Version](https://img.shields.io/badge/rust-1.70%2B-blue.svg)](https://www.rust-lang.org)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 A high-performance, multi-model LLM orchestration service with ensemble strategies, intelligent routing, and caching. Built with Rust for maximum performance and reliability.
-
-> **Note**: Replace `yourusername` in the badge URLs with your actual GitHub username after creating the repository.
 
 ## Features
 
